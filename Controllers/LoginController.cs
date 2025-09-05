@@ -3,6 +3,7 @@ using GymTrainingSystem.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using static GymTrainingSystem.Models.MetaClass;
+using static GymTrainingSystem.Helper.ApplicationHelper;
 
 namespace GymTrainingSystem.Controllers
 {
@@ -34,10 +35,11 @@ namespace GymTrainingSystem.Controllers
                 TempData["Error"] = "Invalid email or password";
                 return RedirectToAction("Index", "Login");
             }
-      
+            SetUserSession(HttpContext, verify);
+
 
             // Successful login, redirect to dashboard or home
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Dashboard", "Home");
         }
 
     }

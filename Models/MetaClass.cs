@@ -34,5 +34,16 @@
                 }
             }
         }
+         
+        public class UserSessionModel
+        {
+            public int UserId { get; set; }
+            public string UserEmail { get; set; }
+            public string UserName { get; set; }
+            public int ClientId { get; set; }
+            public string ClientName { get; set; }
+        }
+
+
     }
 }

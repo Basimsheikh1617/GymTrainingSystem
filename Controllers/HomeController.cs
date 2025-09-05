@@ -2,6 +2,7 @@ using GymTrainingSystem.Data;
 using GymTrainingSystem.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using static GymTrainingSystem.Helper.ApplicationHelper;
 
 namespace GymTrainingSystem.Controllers
 {
@@ -16,12 +17,18 @@ namespace GymTrainingSystem.Controllers
             dbContext = context;
         }
 
-        public IActionResult Index()
+        public IActionResult AddMember()
         {
-            return View();
+            var sessionUser = GetUserSession(HttpContext);
+
+            if (sessionUser == null)
+            {
+                return RedirectToAction("Index", "Login"); // agar session khatam ho gaya
+            }
+                           return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Dashboard()
         {
             return View();
         }
