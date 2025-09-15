@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/GymTrainingSystem.styles.css" asp-append-version="true" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -86,11 +88,11 @@
             width: calc(100% - 80px);
             transition: all 0.3s;
             min-height: 100vh;
-            margin-top: 56px;
+            margin-top: 69px;
             overflow-x: hidden;
             overflow-y: auto;
+            margin-bottom: 69px;
         }
-
             .main-content.shifted {
                 margin-left: 250px;
                 width: calc(100% - 250px);
@@ -174,7 +176,7 @@
             }
 
         .footer {
-            margin-left: 80px;
+            /* margin-left: 80px; */
             width: calc(100% - 80px);
             transition: all 0.3s;
             padding: 10px 0;
@@ -231,7 +233,7 @@
             <h2>GYM</h2>
             <ul>
                 <li><i class="fas fa-tachometer-alt"></i> <span><a asp-area="" asp-controller="Home" asp-action="Dashboard">Dashboard</a></span></li>
-                <li><i class="fas fa-chart-bar"></i> <span><a asp-area="" asp-controller="Home" asp-action="AddMember">Add Member</a> </span></li>
+                <li><i class="fas fa-chart-bar"></i> <span><a asp-area="" asp-controller="Home" asp-action="Member">Add Member</a> </span></li>
                 <li><i class="fas fa-users"></i> <span>Users</span></li>
                 <li><i class="fas fa-cog"></i> <span>Settings</span></li>
                 <li><i class="fas fa-sign-out-alt"></i> <span>Logout</span></li>

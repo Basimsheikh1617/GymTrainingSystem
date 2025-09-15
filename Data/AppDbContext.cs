@@ -25,6 +25,7 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+       
         => optionsBuilder.UseSqlServer("Server=DESKTOP-EE3AP9K;Database=GymSystem;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -44,6 +45,7 @@ public partial class AppDbContext : DbContext
         {
             entity.Property(e => e.Address).HasMaxLength(250);
             entity.Property(e => e.Email).HasMaxLength(250);
+            entity.Property(e => e.Fees).HasColumnType("decimal(18, 0)");
             entity.Property(e => e.FullName).HasMaxLength(250);
             entity.Property(e => e.Gender).HasMaxLength(250);
             entity.Property(e => e.JoiningDate).HasColumnType("datetime");

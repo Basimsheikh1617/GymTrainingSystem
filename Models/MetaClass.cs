@@ -1,4 +1,6 @@
-﻿namespace GymTrainingSystem.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace GymTrainingSystem.Models
 {
     public class MetaClass
     {
@@ -43,7 +45,42 @@
             public int ClientId { get; set; }
             public string ClientName { get; set; }
         }
+        public  class Member
+        {
 
+            public int ClientId { get; set; }
+
+            [Required(ErrorMessage = "Required")]
+            public string FullName { get; set; } = null!;
+
+            [Required(ErrorMessage = "Required")]
+            public string Gender { get; set; } = null!;
+
+            [Required(ErrorMessage = "Required")]
+            public int? Age { get; set; }
+            [Required(ErrorMessage = "Required")]
+            public long? PhoneNumber { get; set; }
+
+            [Required(ErrorMessage = "Required")]
+            public string? Email { get; set; }
+            [Required(ErrorMessage = "Required")]
+            public string? Address { get; set; }
+
+            [Required(ErrorMessage = "Required")]
+            public DateTime JoiningDate { get; set; }
+
+            public string? MemberShipType { get; set; }
+
+
+            [Required(ErrorMessage = "Required")]
+            public bool PersonalTraining { get; set; }
+
+
+            [Required(ErrorMessage = "Required")]
+            public string Status { get; set; } = null!;
+
+
+        }
 
     }
 }

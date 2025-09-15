@@ -35,6 +35,8 @@ public partial class Member
 
     public string Status { get; set; } = null!;
 
+    public decimal? Fees { get; set; }
+
     public DateTime? TimeStamp { get; set; }
 
     public virtual GymClient Client { get; set; } = null!;

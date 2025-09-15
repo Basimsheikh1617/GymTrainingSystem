@@ -1,27 +1,53 @@
-﻿
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+﻿<div class="cards">
+    <div class="card">
+        <h3>Active Members</h3>
+        <p id="activeMembers">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Inactive Members</h3>
+        <p id="unactiveMembers">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Fees Paid Members</h3>
+        <p id="feesPaid">Loading...</p>
+    </div>
+    <div class="card">
+        <h3>Unpaid Members</h3>
+        <p id="unpaid">Loading...</p>
+    </div>
+</div>
 
-<body>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $.ajax({
+            url: '/Home/DayWiseDashboard',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                clientId: 1,
+                Date: new Date().toISOString().split('T')[0]
+            },
+                success: function (response) {
+        console.log("Raw response:", response);
 
+        // Parse the JSON string inside response
+        var data = JSON.parse(response);
 
+        var active   = data.Table?.[0]?.ActiveMember ?? 0;
+        var unactive = data.Table1?.[0]?.UnActiveMember ?? 0;
+        var feesPaid = data.Table2?.[0]?.FeesPaidMember ?? 0;
+        var unpaid   = data.Table3?.[0]?.UnFeesPaidMember ?? 0;
 
-        <div class="cards">
-            <div class="card">
-                <h3>Total Users</h3>
-                <p>1,234</p>
-            </div>
-            <div class="card">
-                <h3>Revenue</h3>
-                <p>$12,345</p>
-            </div>
-            <div class="card">
-                <h3>Orders</h3>
-                <p>567</p>
-            </div>
-        </div>
+        $("#activeMembers").text(active);
+        $("#unactiveMembers").text(unactive);
+        $("#feesPaid").text(feesPaid);
+        $("#unpaid").text(unpaid);
+    },
 
-    
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-</body>
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    });
+</script>

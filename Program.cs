@@ -12,7 +12,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(options =>
 {
-    options.IdleTimeout = TimeSpan.FromSeconds(60); // session timeout
+    options.IdleTimeout = TimeSpan.FromDays(1); // session timeout
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
