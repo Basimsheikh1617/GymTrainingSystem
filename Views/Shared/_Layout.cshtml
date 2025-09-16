@@ -236,7 +236,6 @@
                 <li><i class="fas fa-chart-bar"></i> <span><a asp-area="" asp-controller="Home" asp-action="Member">Add Member</a> </span></li>
                 <li><i class="fas fa-users"></i> <span>Users</span></li>
                 <li><i class="fas fa-cog"></i> <span>Settings</span></li>
-                <li><i class="fas fa-sign-out-alt"></i> <span>Logout</span></li>
             </ul>
         </div>
 
@@ -247,6 +246,8 @@
                 <div class="user-profile">
                     <span>John Doe</span>
                     <img src="https://via.placeholder.com/40" alt="User">
+                    <a asp-controller="Login" asp-action="Logout">Logout</a>
+
                 </div>
             </header>
             <main role="main" class="pb-3">
@@ -264,6 +265,12 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+
+
     <script>
         $(document).ready(function() {
             function initializeLayout() {

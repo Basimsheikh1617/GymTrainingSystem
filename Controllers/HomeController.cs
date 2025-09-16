@@ -21,25 +21,17 @@ namespace GymTrainingSystem.Controllers
             dbContext = context;
         }
 
-        public IActionResult Member()
-        {
-            var sessionUser = GetUserSession(HttpContext);
-
-            if (sessionUser == null)
-            {
-                return RedirectToAction("Index", "Login"); // agar session khatam ho gaya
-            }
-            return View();
-        }
+        
         [HttpPost]
         public JsonResult DayWiseDashboard(int? clientId, DateTime Date)
         {
+            var sessionUser = GetUserSession(HttpContext);
             DataSet dataset = new DataSet();
             Date = Date == DateTime.MinValue ? DateTime.Now : Date.Date;
 
             List<SqlParameter> sqlParameters = new List<SqlParameter>()
             {
-                new SqlParameter("@clientId",clientId),
+                new SqlParameter("@clientId",sessionUser.ClientId),
                 new SqlParameter("@Date",Date),
 
             };
@@ -51,13 +43,29 @@ namespace GymTrainingSystem.Controllers
         }
         public IActionResult Dashboard()
         {
+            var sessionUser = GetUserSession(HttpContext);
+            if (sessionUser == null)
+            {
+                return RedirectToAction("Index", "Login"); // agar session khatam ho gaya
+            }
+            return View();
+        }
+        public IActionResult Member()
+        {
+            var sessionUser = GetUserSession(HttpContext);
+
+            if (sessionUser == null)
+            {
+                return RedirectToAction("Index", "Login"); // agar session khatam ho gaya
+            }
             return View();
         }
         [HttpPost]
-        public IActionResult AddMember([FromForm] Member member)
+        public JsonResult AddMember([FromForm] Member member)
         {
-           
-                dbContext.Members.Add(member);
+            var sessionUser = GetUserSession(HttpContext);
+            member.ClientId = sessionUser.ClientId;
+            dbContext.Members.Add(member);
                 dbContext.SaveChanges();
                 return Json(new { success = true });
             

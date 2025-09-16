@@ -1,12 +1,12 @@
 ﻿@model Member
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 <style>
     body {
         background: linear-gradient(135deg, #f0f4f8, #d9e4f5);
         min-height: 100vh;
     }
 
-   
     .card {
         border: none;
         background: #ffffff;
@@ -57,19 +57,12 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label asp-for="FullName" class="form-label">Name <span class="text-danger">*</span></label>
-                            <input asp-for="FullName"
-                                   id="FullName"
-                                   placeholder="Enter member name"
-                                   required
-                                   class="form-control" />
+                            <input asp-for="FullName" id="FullName" placeholder="Enter member name" required class="form-control" />
                             <span asp-validation-for="FullName" class="text-danger pull-left"></span>
                         </div>
                         <div class="col-md-6">
                             <label asp-for="Gender" class="form-label">Gender <span class="text-danger">*</span></label>
-                            <select asp-for="Gender"
-                                    id="Gender"
-                                    required
-                                    class="form-select">
+                            <select asp-for="Gender" id="Gender" required class="form-select">
                                 <option value="">Select Gender</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
@@ -82,21 +75,12 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label asp-for="Age" class="form-label">Age <span class="text-danger">*</span></label>
-                            <input asp-for="Age"
-                                   id="Age"
-                                   type="number"
-                                   placeholder="Enter age"
-                                   required
-                                   class="form-control" />
+                            <input asp-for="Age" id="Age" type="number" placeholder="Enter age" required class="form-control" />
                             <span asp-validation-for="Age" class="text-danger pull-left"></span>
                         </div>
                         <div class="col-md-6">
                             <label asp-for="PhoneNumber" class="form-label">Phone Number <span class="text-danger">*</span></label>
-                            <input asp-for="PhoneNumber"
-                                   id="PhoneNumber"
-                                   placeholder="Enter phone number"
-                                   required
-                                   class="form-control" />
+                            <input asp-for="PhoneNumber" id="PhoneNumber" placeholder="Enter phone number" required class="form-control" />
                             <span asp-validation-for="PhoneNumber" class="text-danger pull-left"></span>
                         </div>
                     </div>
@@ -104,20 +88,12 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label asp-for="Email" class="form-label">Email <span class="text-danger">*</span></label>
-                            <input asp-for="Email"
-                                   id="Email"
-                                   type="email"
-                                   placeholder="Enter email"
-                                   required
-                                   class="form-control" />
+                            <input asp-for="Email" id="Email" type="email" placeholder="Enter email" required class="form-control" />
                             <span asp-validation-for="Email" class="text-danger pull-left"></span>
                         </div>
                         <div class="col-md-6">
                             <label asp-for="Address" class="form-label">Address</label>
-                            <input asp-for="Address"
-                                   id="Address"
-                                   placeholder="Enter address"
-                                   class="form-control" />
+                            <input asp-for="Address" id="Address" placeholder="Enter address" class="form-control" />
                             <span asp-validation-for="Address" class="text-danger pull-left"></span>
                         </div>
                     </div>
@@ -125,20 +101,13 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label asp-for="JoiningDate" class="form-label">Joining Date <span class="text-danger">*</span></label>
-                            <input asp-for="JoiningDate"
-                                   id="JoiningDate"
-                                   type="date"
-                                   required
-                                   class="form-control" />
+                            <input asp-for="JoiningDate" id="JoiningDate" type="date" required class="form-control" />
                             <span asp-validation-for="JoiningDate" class="text-danger pull-left"></span>
                         </div>
                         <div class="col-md-6">
-                            <label asp-for="MemberShipType" class="form-label">Membership Type <span class="text-danger">*</span></label>
-                            <select asp-for="MemberShipType"
-                                    id="MemberShipType"
-                                    required
-                                    class="form-select">
-                                <option value="" selected="selected" disabled="disabled">Select Type</option>
+                            <label asp-for="MemberShipType" class="form-label">Membership Type</label>
+                            <select asp-for="MemberShipType" id="MemberShipType" class="form-select">
+                                <option value="" selected disabled>Select Type</option>
                                 <option value="Monthly">Monthly</option>
                                 <option value="Yearly">Yearly</option>
                             </select>
@@ -148,21 +117,13 @@
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label asp-for="MemberShipStart" class="form-label">Membership Start <span class="text-danger">*</span></label>
-                            <input asp-for="MemberShipStart"
-                                   id="MemberShipStart"
-                                   type="date"
-                                   required
-                                   class="form-control" />
+                            <label asp-for="MemberShipStart" class="form-label">Membership Start</label>
+                            <input asp-for="MemberShipStart" id="MemberShipStart" type="date" class="form-control" />
                             <span asp-validation-for="MemberShipStart" class="text-danger pull-left"></span>
                         </div>
                         <div class="col-md-6">
-                            <label asp-for="MemberShipEnd" class="form-label">Membership End <span class="text-danger">*</span></label>
-                            <input asp-for="MemberShipEnd"
-                                   id="MemberShipEnd"
-                                   type="date"
-                                   required
-                                   class="form-control" />
+                            <label asp-for="MemberShipEnd" class="form-label">Membership End</label>
+                            <input asp-for="MemberShipEnd" id="MemberShipEnd" type="date" class="form-control" />
                             <span asp-validation-for="MemberShipEnd" class="text-danger pull-left"></span>
                         </div>
                     </div>
@@ -170,11 +131,8 @@
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label asp-for="PersonalTraining" class="form-label">Personal Training <span class="text-danger">*</span></label>
-                            <select asp-for="PersonalTraining"
-                                    id="PersonalTraining"
-                                    required
-                                    class="form-select">
-                                <option value="" selected="selected" disabled="disabled">Select</option>
+                            <select asp-for="PersonalTraining" id="PersonalTraining" required class="form-select">
+                                <option value="" selected disabled>Select</option>
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
                             </select>
@@ -182,10 +140,7 @@
                         </div>
                         <div class="col-md-6">
                             <label asp-for="Status" class="form-label">Status <span class="text-danger">*</span></label>
-                            <select asp-for="Status"
-                                    id="Status"
-                                    required
-                                    class="form-select">
+                            <select asp-for="Status" id="Status" required class="form-select">
                                 <option value="Active">Active</option>
                                 <option value="Inactive">Inactive</option>
                             </select>
@@ -193,70 +148,59 @@
                         </div>
                     </div>
 
-                    <input type="number"
-                           asp-for="ClientId"
-                           name="ClientId"
-                           value="1"
-                           readonly
-                           hidden="hidden" />
-
-                    <button type="submit"
-                            class="btn btn-gym w-100 mt-3">
+                    <button type="submit" class="btn btn-gym w-100 mt-3">
                         <i class="fas fa-dumbbell"></i> Add
                     </button>
                 </form>
             </div>
         </div>
     </div>
+
+    <!-- Loader -->
+    <div id="loader" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.7); z-index:9999; text-align:center;">
+        <div style="position: relative; top: 40%;">
+            <i class="fas fa-spinner fa-spin fa-3x text-success"></i>
+            <p>Saving member...</p>
+        </div>
+    </div>
 </div>
 
-<!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    if (typeof jQuery == 'undefined') {
-        document.write('<script src="/local/jquery-3.6.0.min.js"><\/script>');
-    }
-</script>
+<!-- ✅ Scripts (Correct Order) -->
+@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.unobtrusive-ajax/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+ *@
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
-    if (typeof jQuery.validator == 'undefined') {
-        document.write('<script src="/local/jquery.validate.min.js"><\/script>');
+    function onFormSubmitBegin() {
+        $("#loader").show();
+    }
+
+    function onFormSubmitComplete() {
+        $("#loader").hide();
+    }
+
+    function onFormSuccess(response) {
+        if (response.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: 'Member added successfully.',
+                confirmButtonColor: '#28a745'
+            });
+            $('form')[0].reset();
+        }
+    }
+
+    function onFormFailure() {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Something went wrong! Please try again.'
+        });
     }
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
-<script>
-    $(document).ready(function () {
-        if (typeof $.fn.validate === 'undefined') {
-            console.error('jQuery Validate is not loaded. Please check your network or script sources.');
-            return;
-        }
 
-        $('form').validate({
-            rules: {
-                FullName: "required",
-                Gender: "required",
-                Age: "required",
-                PhoneNumber: "required",
-                Email: "required",
-                JoiningDate: "required",
-                PersonalTraining: "required",
-                Status: "required"
-            },
-            messages: {
-                FullName: "required",
-                Gender: "required",
-                Age: "required",
-                PhoneNumber: "required",
-                Email: "required",
-                JoiningDate: "required",
-                PersonalTraining: "required",
-                Status: "required"
-            },
-            errorPlacement: function (error, element) {
-                if (element.is("select") || element.is("input")) {
-                    error.appendTo(element.next("span"));
-                }
-            }
-        });
-    });
-</script>

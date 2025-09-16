@@ -41,6 +41,20 @@ namespace GymTrainingSystem.Controllers
             // Successful login, redirect to dashboard or home
             return RedirectToAction("Dashboard", "Home");
         }
+        [HttpGet]
+        public IActionResult Logout()
+        {
+            // Remove the saved UserSession
+            HttpContext.Session.Remove("UserSession");
+
+            // Or clear everything (if you want to wipe all sessions)
+            // HttpContext.Session.Clear();
+
+            // Redirect to login page
+            return RedirectToAction("Index", "Login");
+        }
+
+
 
     }
 }
