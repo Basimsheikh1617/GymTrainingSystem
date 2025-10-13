@@ -42,8 +42,10 @@ namespace GymTrainingSystem.Models
             public int UserId { get; set; }
             public string UserEmail { get; set; }
             public string UserName { get; set; }
-            public int ClientId { get; set; }
+            public int? ClientId { get; set; }
             public string ClientName { get; set; }
+            public string Logo { get; set; }
+            public string Address { get; set; }
         }
         public  class Member
         {
@@ -78,6 +80,8 @@ namespace GymTrainingSystem.Models
 
             [Required(ErrorMessage = "Required")]
             public string Status { get; set; } = null!;
+            [Required(ErrorMessage = "Required")]
+            public decimal Fees { get; set; }
 
 
         }

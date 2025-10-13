@@ -7,7 +7,7 @@ public partial class User
 {
     public int Id { get; set; }
 
-    public int ClientId { get; set; }
+    public int? ClientId { get; set; }
 
     public string? Name { get; set; }
 
@@ -19,5 +19,5 @@ public partial class User
 
     public DateTime? TimeStamp { get; set; }
 
-    public virtual GymClient Client { get; set; } = null!;
+    public virtual GymClient? Client { get; set; }
 }

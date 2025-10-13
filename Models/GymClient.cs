@@ -11,6 +11,10 @@ public partial class GymClient
 
     public DateTime Date { get; set; }
 
+    public string? Address { get; set; }
+
+    public string? GymLogo { get; set; }
+
     public bool IsDeleted { get; set; }
 
     public DateTime? TimeStamp { get; set; }

@@ -7,7 +7,7 @@ public partial class Member
 {
     public int MemberId { get; set; }
 
-    public int ClientId { get; set; }
+    public int? ClientId { get; set; }
 
     public string FullName { get; set; } = null!;
 
@@ -39,7 +39,7 @@ public partial class Member
 
     public DateTime? TimeStamp { get; set; }
 
-    public virtual GymClient Client { get; set; } = null!;
+    public virtual GymClient? Client { get; set; }
 
     public virtual ICollection<MemeberFee> MemeberFees { get; set; } = new List<MemeberFee>();
 }

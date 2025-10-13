@@ -138,13 +138,18 @@
                             </select>
                             <span asp-validation-for="PersonalTraining" class="text-danger pull-left"></span>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <label asp-for="Status" class="form-label">Status <span class="text-danger">*</span></label>
                             <select asp-for="Status" id="Status" required class="form-select">
                                 <option value="Active">Active</option>
                                 <option value="Inactive">Inactive</option>
                             </select>
                             <span asp-validation-for="Status" class="text-danger pull-left"></span>
+                        </div>
+                        <div class="col-md-3">
+                            <label asp-for="Fees" class="form-label">Member Fee</label>
+                            <input asp-for="Fees" id="Fees" type="number" class="form-control" />
+                            <span asp-validation-for="Fees" class="text-danger pull-left"></span>
                         </div>
                     </div>
 

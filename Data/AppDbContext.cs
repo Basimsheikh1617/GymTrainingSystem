@@ -25,7 +25,6 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-       
         => optionsBuilder.UseSqlServer("Server=DESKTOP-EE3AP9K;Database=GymSystem;Trusted_Connection=True;TrustServerCertificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,7 +33,9 @@ public partial class AppDbContext : DbContext
         {
             entity.HasKey(e => e.ClientId);
 
+            entity.Property(e => e.Address).HasMaxLength(250);
             entity.Property(e => e.Date).HasColumnType("datetime");
+            entity.Property(e => e.GymLogo).HasMaxLength(250);
             entity.Property(e => e.Name).HasMaxLength(250);
             entity.Property(e => e.TimeStamp)
                 .HasDefaultValueSql("(getdate())")
@@ -59,7 +60,6 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Client).WithMany(p => p.Members)
                 .HasForeignKey(d => d.ClientId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Members_GymClients");
         });
 
@@ -78,7 +78,6 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Client).WithMany(p => p.MemeberFees)
                 .HasForeignKey(d => d.ClientId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_MemeberFees_GymClients");
 
             entity.HasOne(d => d.Member).WithMany(p => p.MemeberFees)
@@ -99,7 +98,6 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Client).WithMany(p => p.Users)
                 .HasForeignKey(d => d.ClientId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Users_GymClients");
         });
 

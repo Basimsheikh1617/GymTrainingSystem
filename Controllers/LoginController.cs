@@ -31,14 +31,12 @@ namespace GymTrainingSystem.Controllers
 
             if (verify == null)
             {
-                // Invalid login, redirect to login page
                 TempData["Error"] = "Invalid email or password";
                 return RedirectToAction("Index", "Login");
             }
             SetUserSession(HttpContext, verify);
 
 
-            // Successful login, redirect to dashboard or home
             return RedirectToAction("Dashboard", "Home");
         }
         [HttpGet]

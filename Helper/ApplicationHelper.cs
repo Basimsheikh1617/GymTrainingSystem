@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
+using System.Data;
 using System.Text.Json;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
@@ -17,7 +19,9 @@ namespace GymTrainingSystem.Helper
                 UserEmail = user.Email,
                 UserName = user.Name,
                 ClientId = user.ClientId,
-                ClientName = user.Client?.Name
+                ClientName = user.Client?.Name,
+                Logo = user.Client?.GymLogo,
+                Address = user.Client?.Address
             };
 
             var userJson = JsonSerializer.Serialize(sessionUser);
@@ -38,7 +42,28 @@ namespace GymTrainingSystem.Helper
             httpContext.Session.Clear();
         }
 
-     
-        
+        public static DataSet ExecuteSp(string spName, SqlParameter[] sqlParams)
+        {
+            DataSet ds = new DataSet();
+            using (SqlConnection sql = new SqlConnection("Server=DESKTOP-EE3AP9K;Database=GymSystem;Trusted_Connection=True;TrustServerCertificate=True;"))
+            {
+                using (SqlDataAdapter da = new SqlDataAdapter())
+                {
+                    using (SqlCommand cmd = new SqlCommand(spName, sql))
+                    {
+                        cmd.CommandType = System.Data.CommandType.StoredProcedure;
+                        //   cmd.Parameters.Add(new SqlParameter("@Id", Id));
+                        cmd.Parameters.AddRange(sqlParams);
+                        da.SelectCommand = cmd;
+                        da.Fill(ds);
+                        cmd.Parameters.Clear();
+                        //sql.Open();
+                    }
+                }
+            }
+            return ds;
+        }
+
+
     }
 }

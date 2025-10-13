@@ -223,18 +223,74 @@
                 margin-left: 250px;
                 width: calc(100% - 250px);
             }
-
         }
+
+        .user-profile {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #333;
+        }
+
+            .dropdown-toggle img {
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+            }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 110%;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            min-width: 150px;
+            z-index: 1000;
+        }
+
+            .dropdown-menu a {
+                display: block;
+                padding: 10px 15px;
+                color: #333;
+                text-decoration: none;
+                transition: background 0.2s;
+            }
+
+                .dropdown-menu a:hover {
+                    background-color: #f1f1f1;
+                }
+
     </style>
 </head>
+@using GymTrainingSystem.Helper
+@{
+        var sessionUser = ApplicationHelper.GetUserSession(Context);
+}
 <body>
     <div class="wrapper">
         <div class="sidebar">
-            <h2>GYM</h2>
+           @*  <h2>@sessionUser?.ClientName</h2> *@
             <ul>
                 <li><i class="fas fa-tachometer-alt"></i> <span><a asp-area="" asp-controller="Home" asp-action="Dashboard">Dashboard</a></span></li>
                 <li><i class="fas fa-chart-bar"></i> <span><a asp-area="" asp-controller="Home" asp-action="Member">Add Member</a> </span></li>
-                <li><i class="fas fa-users"></i> <span>Users</span></li>
+                <li><i class="fas fa-users"></i><span><a asp-controller="Member" asp-action="Members">Users</a></span></li>
                 <li><i class="fas fa-cog"></i> <span>Settings</span></li>
             </ul>
         </div>
@@ -242,13 +298,31 @@
         <div class="main-content">
             <header class="header">
                 <button class="toggle-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Dashboard">GYM</a>
-                <div class="user-profile">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Dashboard">@sessionUser?.ClientName</a>
+                @* <div class="user-profile">
                     <span>John Doe</span>
                     <img src="https://via.placeholder.com/40" alt="User">
-                    <a asp-controller="Login" asp-action="Logout">Logout</a>
 
+                </div> *@
+                <div class="user-profile">
+                    <div class="dropdown">
+                        <button class="dropdown-toggle" onclick="toggleDropdown()">
+                           @*  <span>@sessionUser?.ClientName</span> *@
+                            <img src="~/@(string.IsNullOrEmpty(sessionUser?.Logo)
+                                                 ? Url.Content("~/images/default-logo.png")
+                                                 : sessionUser.Logo)"
+                                 alt="User Logo" width="40" height="40" class="rounded-circle" />
+                            @* <i class="fas fa-caret-down"></i> *@
+                        </button>
+                        <div id="userDropdown" class="dropdown-menu">
+                            <a asp-controller="Home" asp-action="Profile">My Profile</a>
+                            <a asp-controller="Login" asp-action="Logout">Logout</a>
+                        </div>
+                    </div>
                 </div>
+
+                <a asp-controller="Login" asp-action="Logout">Logout</a>
+
             </header>
             <main role="main" class="pb-3">
                 @RenderBody()
@@ -262,10 +336,9 @@
         </footer>
     </div>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
     <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
@@ -297,6 +370,19 @@
               
             });
         });
+
+    </script>
+    <script>
+        function toggleDropdown() {
+            document.getElementById("userDropdown").classList.toggle("show");
+        }
+
+        // Close dropdown when clicking outside
+        window.onclick = function(event) {
+            if (!event.target.closest('.dropdown')) {
+                document.getElementById("userDropdown")?.classList.remove("show");
+            }
+        };
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

@@ -7,7 +7,7 @@ public partial class MemeberFee
 {
     public int PaymentId { get; set; }
 
-    public int ClientId { get; set; }
+    public int? ClientId { get; set; }
 
     public int MemberId { get; set; }
 
@@ -21,7 +21,7 @@ public partial class MemeberFee
 
     public DateTime? TimeStamp { get; set; }
 
-    public virtual GymClient Client { get; set; } = null!;
+    public virtual GymClient? Client { get; set; }
 
     public virtual Member Member { get; set; } = null!;
 }

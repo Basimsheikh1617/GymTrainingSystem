@@ -1,0 +1,105 @@
+﻿
+@{
+    ViewData["Title"] = "Members List";
+}
+
+<style>
+    div.dt-container {
+        position: relative;
+        clear: both;
+        overflow: auto;
+    }
+
+    body {
+        background-color: transparent !important;
+        margin: 0;
+        /* overflow-x: hidden; */
+    }
+</style>
+
+<table id="membersTable" class="table table-striped table-bordered display" style="width:100%">
+    <thead>
+        <tr></tr> <!-- Placeholder for dynamic headers -->
+    </thead>
+</table>
+
+@section Scripts {
+    <!-- DataTables Bootstrap 5 integration -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.0.2/css/buttons.bootstrap5.min.css" />
+
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
+
+    <!-- DataTables Buttons for export features -->
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/3.0.2/js/buttons.colVis.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script> <!-- For Excel export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script> <!-- For PDF export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script> <!-- For PDF fonts -->
+
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: '@Url.Action("Get_Member", "Member")',
+                type: 'POST',
+                success: function (response) {
+                    // Parse the returned JSON (DataTables expects real JSON)
+                    var data = response.data;
+
+                    if (!data || data.length === 0) {
+                        $('#membersTable').html("<tr><td>No members found</td></tr>");
+                        return;
+                    }
+
+                    // Dynamically create columns based on the first row's keys
+                    var columns = Object.keys(data[0]).map(key => ({
+                        data: key,
+                        title: key.charAt(0).toUpperCase() + key.slice(1) // Capitalize titles
+                    }));
+
+                    // Initialize DataTable dynamically
+                    var table = $('#membersTable').DataTable({
+                        data: data,
+                        columns: columns,
+                        pageLength: 10,
+                        responsive: true,
+                        dom: 'lBfrtip', // l for length menu, B for buttons, f for filter, r for processing, t for table, i for info, p for pagination
+                        buttons: [
+                            'colvis', // Column visibility first
+                            'copy',   // Copy to clipboard
+                            'csv',    // CSV export
+                            'excel',  // Excel export
+                            'pdf',    // PDF export
+                            'print'   // Print
+                        ],
+                        orderCellsTop: true, // Sorting on top header row
+                        fixedHeader: false
+                    });
+
+                    // Add second header row for per-column searches to match the image
+                    $('#membersTable thead tr').clone(true).appendTo('#membersTable thead');
+                    $('#membersTable thead tr:eq(1) th').each(function (i) {
+                        var title = $(this).text();
+                        $(this).html('<input type="text" placeholder="Search ' + title + '" style="width:100%;" />');
+
+                        $('input', this).on('keyup change clear', function () {
+                            if (table.column(i).search() !== this.value) {
+                                table.column(i).search(this.value).draw();
+                            }
+                        });
+                    });
+
+                    // Disable sorting on the search input row
+                    $('#membersTable thead tr:eq(1) th').removeClass('sorting sorting_asc sorting_desc');
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error loading members:", error);
+                }
+            });
+        });
+    </script>
+}
