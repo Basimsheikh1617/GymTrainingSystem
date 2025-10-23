@@ -1,53 +1,435 @@
-﻿<div class="cards">
-    <div class="card">
-        <h3>Active Members</h3>
-        <p id="activeMembers">Loading...</p>
+﻿
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container mt-4">
+    <!-- Dark/Light Mode Toggle -->
+    <div class="row mb-4 justify-content-end">
+        <div class="col-md-2">
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" id="darkModeToggle">
+                <label class="form-check-label" for="darkModeToggle">Dark Mode</label>
+            </div>
+        </div>
     </div>
-    <div class="card">
-        <h3>Inactive Members</h3>
-        <p id="unactiveMembers">Loading...</p>
+
+    <!-- Date Picker -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <label for="dashboardDate">Select Date:</label>
+            <input type="date" id="dashboardDate" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")">
+        </div>
     </div>
-    <div class="card">
-        <h3>Fees Paid Members</h3>
-        <p id="feesPaid">Loading...</p>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm border-0 rounded">
+                <div class="card-body">
+                    <i class="fas fa-users fa-2x text-primary mb-2"></i>
+                    <h5 class="card-title">Active Members</h5>
+                    <h3 id="activeMembers" class="card-text">Loading...</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm border-0 rounded">
+                <div class="card-body">
+                    <i class="fas fa-user-times fa-2x text-warning mb-2"></i>
+                    <h5 class="card-title">Inactive Members</h5>
+                    <h3 id="unactiveMembers" class="card-text">Loading...</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm border-0 rounded">
+                <div class="card-body">
+                    <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                    <h5 class="card-title">Fees Paid Members</h5>
+                    <h3 id="feesPaid" class="card-text">Loading...</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center shadow-sm border-0 rounded">
+                <div class="card-body">
+                    <i class="fas fa-exclamation-triangle fa-2x text-danger mb-2"></i>
+                    <h5 class="card-title">Unpaid Members</h5>
+                    <h3 id="unpaid" class="card-text">Loading...</h3>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="card">
-        <h3>Unpaid Members</h3>
-        <p id="unpaid">Loading...</p>
+
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card text-center shadow-sm border-0 rounded">
+                <div class="card-body">
+                    <i class="fas fa-user-friends fa-2x text-info mb-2"></i>
+                    <h5 class="card-title">Total Members</h5>
+                    <h3 id="totalMembers" class="card-text">Loading...</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytic Charts Section -->
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 rounded">
+                <div class="card-header bg-dark text-white">
+                    Member Status Analytics
+                </div>
+                <div class="card-body">
+                    <canvas id="memberPieChart" width="400" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 rounded">
+                <div class="card-header bg-dark text-white">
+                    Fees Status Analytics
+                </div>
+                <div class="card-body">
+                    <canvas id="feesBarChart" width="400" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 rounded">
+                <div class="card-header bg-dark text-white">
+                    Last 7 Days Active Members Trend
+                </div>
+                <div class="card-body">
+                    <canvas id="activeTrendChart" width="400" height="400"></canvas>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<style>
+    :root {
+        --bg-color: #ffffff;
+        --text-color: #000000;
+        --card-bg: #ffffff;
+        --card-shadow: rgba(0, 0, 0, 0.1);
+        --header-bg: #343a40;
+        --header-text: #ffffff;
+        --primary: #007bff;
+        --warning: #ffc107;
+        --success: #28a745;
+        --danger: #dc3545;
+        --info: #17a2b8;
+        --chart-text: #000000;
+        --chart-grid: #dee2e6;
+    }
+
+    body.dark-mode {
+        --bg-color: #121212;
+        --text-color: white;
+        --card-bg: #1e1e1e;
+        --card-shadow: rgba(255, 255, 255, 0.1);
+        --header-bg: #2c2c2c;
+        --header-text: #e0e0e0;
+        --primary: #66b2ff;
+        --warning: #ffd966;
+        --success: #66d98b;
+        --danger: #ff6666;
+        --info: #66d9e8;
+        --chart-text: #e0e0e0;
+        --chart-grid: #444444;
+    }
+
+    body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .card {
+        background-color: var(--card-bg);
+        box-shadow: 0 4px 8px var(--card-shadow);
+        transition: transform 0.2s, background-color 0.3s;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+    .card-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text-color);
+    }
+
+    .card-text {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--text-color);
+    }
+
+    .card-header {
+        background-color: var(--header-bg);
+        color: var(--header-text);
+    }
+
+    .text-primary {
+        color: var(--primary) !important;
+    }
+
+    .text-warning {
+        color: var(--warning) !important;
+    }
+
+    .text-success {
+        color: var(--success) !important;
+    }
+
+    .text-danger {
+        color: var(--danger) !important;
+    }
+
+    .text-info {
+        color: var(--info) !important;
+    }
+
+    .form-control {
+        background-color: var(--card-bg);
+        color: var(--text-color);
+        border-color: var(--header-bg);
+    }
+
+    .form-check-label {
+        color: var(--text-color);
+    }
+
+    .card-body canvas {
+        background-color: var(--card-bg);
+    }
+</style>
+
+<!-- Include Font Awesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
-        $.ajax({
-            url: '/Home/DayWiseDashboard',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                // clientId: 1,
-                Date: new Date().toISOString().split('T')[0]
-            },
-                success: function (response) {
-        console.log("Raw response:", response);
+        // Dark Mode Toggle
+        const darkModeToggle = $('#darkModeToggle');
+        const body = $('body');
 
-        // Parse the JSON string inside response
-        var data = JSON.parse(response);
+        // Load saved preference
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            body.addClass('dark-mode');
+            darkModeToggle.prop('checked', true);
+        }
 
-        var active   = data.Table?.[0]?.ActiveMember ?? 0;
-        var unactive = data.Table1?.[0]?.UnActiveMember ?? 0;
-        var feesPaid = data.Table2?.[0]?.FeesPaidMember ?? 0;
-        var unpaid   = data.Table3?.[0]?.UnFeesPaidMember ?? 0;
-
-        $("#activeMembers").text(active);
-        $("#unactiveMembers").text(unactive);
-        $("#feesPaid").text(feesPaid);
-        $("#unpaid").text(unpaid);
-    },
-
-            error: function (xhr, status, error) {
-                console.error("Error:", error);
+        // Toggle event
+        darkModeToggle.on('change', function() {
+            if ($(this).is(':checked')) {
+                body.addClass('dark-mode');
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                body.removeClass('dark-mode');
+                localStorage.setItem('darkMode', 'disabled');
             }
+            // Update charts to match theme
+            updateCharts();
+        });
+
+        var memberPieChart, feesBarChart, activeTrendChart;
+
+        function getChartOptions(titleText) {
+            const isDark = body.hasClass('dark-mode');
+            return {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: titleText,
+                        color: isDark ? '#e0e0e0' : '#000000'
+                    },
+                    legend: {
+                        labels: {
+                            color: isDark ? '#e0e0e0' : '#000000'
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: isDark ? '#e0e0e0' : '#000000' },
+                        grid: { color: isDark ? '#444444' : '#dee2e6' }
+                    },
+                    y: {
+                        ticks: { color: isDark ? '#e0e0e0' : '#000000' },
+                        grid: { color: isDark ? '#444444' : '#dee2e6' }
+                    }
+                }
+            };
+        }
+
+        function fetchDashboardData(selectedDate) {
+            return $.ajax({
+                url: '/Home/DayWiseDashboard',
+                type: 'POST',
+                dataType: 'json',
+                data: { Date: selectedDate },
+                success: function (response) {
+                    console.log("Response for " + selectedDate + ":", response);
+
+                    var data = JSON.parse(response); // Assuming dataType 'json' parses it; remove JSON.parse if not needed
+                    var active   = data.Table?.[0]?.ActiveMember ?? 0;
+                    var unactive = data.Table1?.[0]?.UnActiveMember ?? 0;
+                    var feesPaid = data.Table2?.[0]?.FeesPaidMember ?? 0;
+                    var unpaid   = data.Table3?.[0]?.UnFeesPaidMember ?? 0;
+                    var total    = active + unactive;
+
+                    $("#activeMembers").text(active);
+                    $("#unactiveMembers").text(unactive);
+                    $("#feesPaid").text(feesPaid);
+                    $("#unpaid").text(unpaid);
+                    $("#totalMembers").text(total);
+
+                    // Update Pie Chart
+                    if (memberPieChart) memberPieChart.destroy();
+                    var memberCtx = document.getElementById('memberPieChart').getContext('2d');
+                    var pieOptions = getChartOptions('Member Status Distribution');
+                    pieOptions.plugins.legend.position = 'top';
+                    memberPieChart = new Chart(memberCtx, {
+                        type: 'pie',
+                        data: {
+                            labels: ['Active', 'Inactive'],
+                            datasets: [{
+                                data: [active, unactive],
+                                backgroundColor: ['#36A2EB', '#FF6384'],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: pieOptions
+                    });
+
+                    // Update Bar Chart
+                    if (feesBarChart) feesBarChart.destroy();
+                    var feesCtx = document.getElementById('feesBarChart').getContext('2d');
+                    var barOptions = getChartOptions('Fees Payment Status');
+                    barOptions.scales.y.beginAtZero = true;
+                    barOptions.plugins.legend.display = false;
+                    feesBarChart = new Chart(feesCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Paid', 'Unpaid'],
+                            datasets: [{
+                                label: 'Members',
+                                data: [feesPaid, unpaid],
+                                backgroundColor: ['#4BC0C0', '#FFCE56'],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: barOptions
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            }).then(function() {
+                // Return active from the data (extract after success)
+                var active = parseInt($("#activeMembers").text()) || 0;
+                return active;
+            });
+        }
+
+        function fetchLast7DaysTrend(currentActive) {
+            var dates = [];
+            var today = new Date($('#dashboardDate').val());
+            var todayStr = today.toISOString().split('T')[0];
+
+            // Past 6 days
+            for (var i = 6; i >= 1; i--) { // Skip i=0 to avoid duplicate
+                var date = new Date(today);
+                date.setDate(date.getDate() - i);
+                var dateStr = date.toISOString().split('T')[0];
+                dates.push(dateStr);
+            }
+            dates.push(todayStr); // Add today last
+
+            var promises = dates.slice(0, -1).map(function(dateStr) { // Fetch only past 6
+                return new Promise(function(resolve) {
+                    $.ajax({
+                        url: '/Home/DayWiseDashboard',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: { Date: dateStr },
+                        success: function(response) {
+                            var data = JSON.parse(response); // Consistent with above
+                            var active = data.Table?.[0]?.ActiveMember ?? 0;
+                            resolve(active);
+                        },
+                        error: function() {
+                            resolve(0);
+                        }
+                    });
+                });
+            });
+
+            Promise.all(promises).then(function(pastValues) {
+                var actives = pastValues.concat(currentActive); // Add current active
+
+                if (activeTrendChart) activeTrendChart.destroy();
+                var trendCtx = document.getElementById('activeTrendChart').getContext('2d');
+                var lineOptions = getChartOptions('Active Members Over Last 7 Days');
+                lineOptions.scales.y.beginAtZero = true;
+                activeTrendChart = new Chart(trendCtx, {
+                    type: 'line',
+                    data: {
+                        labels: dates,
+                        datasets: [{
+                            label: 'Active Members',
+                            data: actives,
+                            borderColor: '#36A2EB',
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            fill: true
+                        }]
+                    },
+                    options: lineOptions
+                });
+            });
+        }
+
+        function updateCharts() {
+            if (memberPieChart) memberPieChart.options = getChartOptions('Member Status Distribution');
+            if (feesBarChart) {
+                var barOptions = getChartOptions('Fees Payment Status');
+                barOptions.scales.y.beginAtZero = true;
+                barOptions.plugins.legend.display = false;
+                feesBarChart.options = barOptions;
+            }
+            if (activeTrendChart) {
+                var lineOptions = getChartOptions('Active Members Over Last 7 Days');
+                lineOptions.scales.y.beginAtZero = true;
+                activeTrendChart.options = lineOptions;
+            }
+            if (memberPieChart) memberPieChart.update();
+            if (feesBarChart) feesBarChart.update();
+            if (activeTrendChart) activeTrendChart.update();
+        }
+
+        // Initial load
+        var initialDate = $('#dashboardDate').val();
+        fetchDashboardData(initialDate).then(function(currentActive) {
+            fetchLast7DaysTrend(currentActive);
+        });
+
+        // On date change
+        $('#dashboardDate').on('change', function() {
+            var newDate = $(this).val();
+            fetchDashboardData(newDate).then(function(currentActive) {
+                fetchLast7DaysTrend(currentActive);
+            });
         });
     });
 </script>

@@ -30,9 +30,7 @@ namespace GymTrainingSystem.Controllers
         public JsonResult Get_Member()
         {
             var sessionUser = GetUserSession(HttpContext);
-            if (sessionUser?.ClientId == null)
-                return Json(new { data = new object[0] });
-
+            
             List<SqlParameter> sqlParameters = new List<SqlParameter>
     {
         new SqlParameter("@clientId", sessionUser.ClientId)

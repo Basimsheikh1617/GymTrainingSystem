@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Members List";
 }
 
@@ -14,6 +13,81 @@
         background-color: transparent !important;
         margin: 0;
         /* overflow-x: hidden; */
+    }
+
+    /* Custom styles to make DataTable look more professional and modern */
+    #membersTable {
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Modern font */
+    }
+
+        #membersTable thead th {
+            background-color: #343a40; /* Dark header background to match professional themes (e.g., dark blue/gray) */
+            color: #ffffff; /* White text for contrast */
+            text-align: left;
+            padding: 12px 15px;
+            border-bottom: 2px solid #dee2e6; /* Subtle border */
+            font-weight: 600;
+        }
+
+        #membersTable tbody tr {
+            transition: background-color 0.2s ease; /* Smooth hover effect */
+        }
+
+            #membersTable tbody tr:hover {
+                background-color: #f1f1f1; /* Light hover for interaction feedback */
+            }
+
+        #membersTable tbody td {
+            padding: 10px 15px;
+            border-top: 1px solid #dee2e6; /* Light borders */
+        }
+
+        /* Style for search inputs in the second header row */
+        #membersTable thead tr:eq(1) th input {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-size: 0.875rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+    /* DataTables controls (pagination, buttons, etc.) */
+    .dt-buttons .btn {
+        border-radius: 4px;
+        margin-right: 5px;
+        font-size: 0.875rem;
+        padding: 6px 12px;
+    }
+
+    .dataTables_paginate .paginate_button {
+        border-radius: 4px;
+        margin: 0 2px;
+    }
+
+    .dataTables_length select,
+    .dataTables_filter input {
+        border-radius: 4px;
+        border: 1px solid #ced4da;
+        padding: 6px 10px;
+    }
+
+    table.table.dataTable.table-striped > tbody > tr:nth-of-type(2n+1) > * {
+        box-shadow: none !important;
+    }
+    /* Ensure responsive design looks clean */
+    @@media (max-width: 768px) {
+        #membersTable
+
+    {
+        font-size: 0.875rem;
+    }
+
     }
 </style>
 
@@ -49,16 +123,23 @@
                 success: function (response) {
                     // Parse the returned JSON (DataTables expects real JSON)
                     var data = response.data;
-
+                    console.log(data);
                     if (!data || data.length === 0) {
                         $('#membersTable').html("<tr><td>No members found</td></tr>");
                         return;
                     }
 
                     // Dynamically create columns based on the first row's keys
+                    var dateColumns = ['JoiningDate', 'MemberShipStart', 'MemberShipEnd']; // Add more if needed
                     var columns = Object.keys(data[0]).map(key => ({
                         data: key,
-                        title: key.charAt(0).toUpperCase() + key.slice(1) // Capitalize titles
+                        title: key.charAt(0).toUpperCase() + key.slice(1), // Capitalize titles
+                        render: dateColumns.includes(key) ? function(data, type, row) {
+                            if (data && data.includes('T')) {
+                                return data.split('T')[0]; // Extract only the date part
+                            }
+                            return data || ''; // Return as is if no time or empty
+                        } : null
                     }));
 
                     // Initialize DataTable dynamically
@@ -77,7 +158,12 @@
                             'print'   // Print
                         ],
                         orderCellsTop: true, // Sorting on top header row
-                        fixedHeader: false
+                        fixedHeader: false,
+                        language: {
+                            search: "Search all columns:", // More professional search label
+                            lengthMenu: "Show _MENU_ entries", // Customized menu text
+                            info: "Showing _START_ to _END_ of _TOTAL_ entries" // Info text
+                        }
                     });
 
                     // Add second header row for per-column searches to match the image
@@ -103,3 +189,4 @@
         });
     </script>
 }
+
