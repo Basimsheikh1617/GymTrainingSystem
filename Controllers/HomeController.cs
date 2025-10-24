@@ -1,12 +1,16 @@
 using GymTrainingSystem.Data;
 using GymTrainingSystem.Models;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Data;
 using System.Diagnostics;
+using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using static GymTrainingSystem.Helper.ApplicationHelper;
 
 namespace GymTrainingSystem.Controllers
@@ -42,6 +46,39 @@ namespace GymTrainingSystem.Controllers
             return View(client);
             
         }
+        //[HttpPost]
+        //public JsonResult SaveProfile(GymClient model, IFormFile? logo)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return Json(new { success = false, message = "Invalid model data." });
+        //    }
+
+        //    var existingClient = dbContext.GymClients.FirstOrDefault(x => x.ClientId == model.ClientId);
+        //    if (existingClient == null)
+        //    {
+        //        return Json(new { success = false, message = "Client not found." });
+        //    }
+
+        //    // ? Handle logo upload
+        //    if (logo != null && logo.Length > 0)
+        //    {
+        //        string newPath = UploadClientLogo(logo);
+        //        if (!string.IsNullOrEmpty(newPath))
+        //        {
+        //            existingClient.GymLogo = newPath;
+        //        }
+        //    }
+
+        //    // ? Update other fields
+        //    existingClient.Name = model.Name;
+        //    existingClient.Address = model.Address;
+        //    existingClient.Date = model.Date;
+
+        //    dbContext.SaveChanges();
+
+        //    return Json(new { success = true, message = "Profile updated successfully!" });
+        //}
         [HttpPost]
         public JsonResult SaveProfile(GymClient model, IFormFile? logo)
         {
@@ -56,7 +93,7 @@ namespace GymTrainingSystem.Controllers
                 return Json(new { success = false, message = "Client not found." });
             }
 
-            // ? Handle logo upload
+            // Handle logo upload
             if (logo != null && logo.Length > 0)
             {
                 string newPath = UploadClientLogo(logo);
@@ -66,16 +103,36 @@ namespace GymTrainingSystem.Controllers
                 }
             }
 
-            // ? Update other fields
+            // Update other fields
             existingClient.Name = model.Name;
             existingClient.Address = model.Address;
-            existingClient.Date = model.Date;
 
             dbContext.SaveChanges();
 
+            // Directly update the current session model without re-fetching user from DB
+            var sessionUser = GetUserSession(HttpContext);
+            if (sessionUser != null)
+            {
+                sessionUser.ClientName = existingClient.Name;
+                sessionUser.Address = existingClient.Address;
+                sessionUser.Logo = existingClient.GymLogo ?? sessionUser.Logo;  // Keep old if no new logo
+
+                // Fix serialization error (handle potential cycles or issues)
+                var options = new JsonSerializerOptions
+                {
+                    ReferenceHandler = ReferenceHandler.IgnoreCycles,
+                    WriteIndented = true  // Optional, for readability if debugging
+                };
+                var updatedJson = System.Text.Json.JsonSerializer.Serialize(sessionUser, options);
+                HttpContext.Session.SetString("UserSession", updatedJson);
+            }
+            else
+            {
+                return Json(new { success = false, message = "Session error. Please log in again." });
+            }
+
             return Json(new { success = true, message = "Profile updated successfully!" });
         }
-
         private string UploadClientLogo(IFormFile logo)
         {
             try

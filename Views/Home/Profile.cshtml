@@ -9,7 +9,7 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="SaveProfile" enctype="multipart/form-data" method="post">
+        <form id="profileForm" asp-action="SaveProfile" enctype="multipart/form-data" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="ClientId" />
             <div class="form-group">
@@ -19,21 +19,16 @@
             </div>
             <div class="form-group">
                 <label asp-for="Date" class="control-label">GymStart Date:</label>
-                <input asp-for="Date" class="form-control" readonly/>
+                <input asp-for="Date" class="form-control" readonly />
             </div>
             <div class="form-group">
-                <label asp-for="Address" class="control-label"></label>
+                <label asp-for="Address" class="control-label">Address:</label>
                 <input asp-for="Address" class="form-control" />
                 <span asp-validation-for="Address" class="text-danger"></span>
             </div>
-      @*       <div class="form-group">
-                <label asp-for="GymLogo" class="control-label"></label>
-                <input asp-for="GymLogo" class="form-control" />
-                <span asp-validation-for="GymLogo" class="text-danger"></span>
-            </div> *@
             <div class="form-group">
                 <label>GymLogo</label>
-                <input asp-for="GymLogo" type="file" name="logo" class="form-control" />
+                <input type="file" name="logo" class="form-control" />
             </div>
 
             <div class="form-group">
@@ -43,7 +38,48 @@
     </div>
 </div>
 
+<!-- Loader: Overlay style for better visibility -->
+<div id="loader" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255,255,255,0.8); padding: 20px; border: 1px solid #ccc; z-index: 1000; font-weight: bold; color: blue;">Saving... Please wait.</div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(function () {
+            console.log("Script loaded");  // Debug: Check if JS runs
+
+            $('#profileForm').submit(function (e) {
+                e.preventDefault();  // Stop sync submit
+                console.log("Form submit intercepted");  // Debug
+
+                var formData = new FormData(this);  // For file upload
+
+                $('#loader').show();  // Show loader
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        console.log("AJAX success", data);  // Debug
+                        $('#loader').hide();
+                        if (data.success) {
+                            location.reload();  // Reload to show updates
+                        } else {
+                            alert(data.message);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("AJAX error", error);  // Debug
+                        $('#loader').hide();
+                        alert('Error saving profile: ' + error);
+                    }
+                });
+            });
+        });
+    </script>
 }

@@ -1,4 +1,5 @@
-﻿@* <!-- Theme Toggle -->
+﻿
+@* <!-- Theme Toggle -->
 <div class="theme-toggle">
     <label class="switch">
         <input type="checkbox" id="themeToggle">
@@ -6,379 +7,11 @@
     </label>
     <span id="themeLabel">🌞 Light Mode</span>
 </div>
-
-<div class="containers">
-    <div class="row">
-        <div class="col-lg-6">
-            <h2>💪 Gym Fees Payment</h2>
-            <p class="subtitle">Enter member payment details below</p>
-
-            <form id="paymentForm">
-                <label>Client ID</label>
-                <input type="number" id="ClientId" placeholder="Enter Client ID" required>
-
-                <label>Member ID</label>
-                <input type="number" id="MemberId" placeholder="Enter Member ID" required>
-
-                <label>Payment Date</label>
-                <input type="date" id="Date" required>
-
-                <label>Status</label>
-                <select id="Status" required>
-                    <option value="">Select Status</option>
-                    <option value="Paid">Paid</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Overdue">Overdue</option>
-                </select>
-
-                <label>Fees (₹)</label>
-                <input type="number" id="Fees" placeholder="Enter Amount" step="0.01" required>
-
-                <button class="btnns" type="submit">Submit Payment</button>
-            </form>
-
-            <div id="successMsg" class="success hidden">✅ Payment Recorded Successfully!</div>
-        </div>
-
-        <div class="col-lg-6">
-            <!-- Professional Payslip -->
-            <div id="payslip" class="payslip hidden">
-                <div class="slipheader">
-                    <div class="logo">🏋️‍♂️ FitZone Gym</div>
-                    <div class="invoice-info">
-                        <h3>Payment Receipt</h3>
-                        <p><strong>Receipt No:</strong> <span id="receiptId"></span></p>
-                        <p><strong>Date:</strong> <span id="slipDate"></span></p>
-                    </div>
-                </div>
-                <hr>
-
-                <div class="details">
-                    <p><strong>Client ID:</strong> <span id="slipClient"></span></p>
-                    <p><strong>Member ID:</strong> <span id="slipMember"></span></p>
-                    <p><strong>Status:</strong> <span id="slipStatus"></span></p>
-                </div>
-
-                <div class="summary">
-                    <table>
-                        <tr>
-                            <th>Description</th>
-                            <th>Amount (₹)</th>
-                        </tr>
-                        <tr>
-                            <td>Monthly Gym Fees</td>
-                            <td id="slipFees"></td>
-                        </tr>
-                        <tr class="total-row">
-                            <td><strong>Total Paid</strong></td>
-                            <td><strong id="slipTotal"></strong></td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div class="footers">
-                    <p>Thank you for staying fit with <strong>FitZone Gym</strong> 🏋️‍♀️</p>
-                    <button id="printSlipBtn" class="printBtn">🖨️ Print Receipt</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<style>
-    body {
-        font-family: "Poppins", sans-serif;
-        background: #f0f2f5;
-        transition: 0.4s ease;
-    }
-
-    .dark-mode {
-        background: #121212;
-        color: #ddd;
-    }
-
-    .containers {
-        background: var(--bg-card, #fff);
-        border-radius: 15px;
-        padding: 30px 40px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        animation: fadeIn 0.8s ease;
-        transition: 0.3s;
-    }
-
-    .dark-mode .containers {
-        background: #1e1e1e;
-        box-shadow: 0 10px 20px rgba(255,255,255,0.05);
-    }
-
-    h2 {
-        text-align: center;
-        color: inherit;
-    }
-
-    .subtitle {
-        text-align: center;
-        color: #777;
-    }
-
-    label {
-        font-weight: 600;
-        display: block;
-        margin-bottom: 6px;
-    }
-
-    input, select {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 18px;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        font-size: 14px;
-        transition: 0.3s;
-        background: #fff;
-        color: #000;
-    }
-
-    .dark-mode input, .dark-mode select {
-        background: #333;
-        border-color: #555;
-        color: #fff;
-    }
-
-    .btnns {
-        width: 100%;
-        background: #283e51;
-        color: white;
-        border: none;
-        padding: 12px;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-
-        .btnns:hover {
-            background: #1d2d3a;
-        }
-
-    .success {
-        text-align: center;
-        color: #2ecc71;
-        font-weight: bold;
-        margin-top: 15px;
-        opacity: 0;
-        transform: scale(0.9);
-        transition: all 0.5s ease;
-    }
-
-        .success.show {
-            opacity: 1;
-            transform: scale(1);
-        }
-
-    .hidden {
-        display: none;
-    }
-
-    .payslip {
-        margin-top: 25px;
-        border: 1px solid #ccc;
-        border-radius: 12px;
-        padding: 20px;
-        background: #f9fafc;
-        transition: 0.3s;
-    }
-
-    .dark-mode .payslip {
-        background: #2b2b2b;
-        border-color: #444;
-    }
-
-    .slipheader {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .logo {
-        font-size: 18px;
-        font-weight: bold;
-        color: #283e51;
-    }
-
-    .dark-mode .logo {
-        color: #fff;
-    }
-
-    .summary th, .summary td {
-        border: 1px solid #ccc;
-        padding: 8px;
-        text-align: center;
-    }
-
-    .dark-mode .summary th, .dark-mode .summary td {
-        border-color: #555;
-    }
-
-    .footers {
-        text-align: center;
-        margin-top: 15px;
-    }
-
-    .printBtn {
-        margin-top: 10px;
-        background: #2ecc71;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-weight: bold;
-    }
-
-        .printBtn:hover {
-            background: #27ae60;
-        }
-
-    /* Toggle Switch */
-    .theme-toggle {
-        position: fixed;
-        top: 15px;
-        right: 25px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 50px;
-        height: 25px;
-    }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        background-color: #ccc;
-        border-radius: 25px;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        transition: 0.4s;
-    }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 19px;
-            width: 19px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: 0.4s;
-            border-radius: 50%;
-        }
-
-    input:checked + .slider {
-        background-color: #283e51;
-    }
-
-        input:checked + .slider:before {
-            transform: translateX(25px);
-        }
-
-    /* Print only payslip */
-    @@media print {
-        body *
-
-    {
-        visibility: hidden;
-    }
-
-    #payslip, #payslip * {
-        visibility: visible;
-    }
-
-    #payslip {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-    }
-
-    }
-</style>
-
-<script>
-    const form = document.getElementById("paymentForm");
-    const msg = document.getElementById("successMsg");
-    const slip = document.getElementById("payslip");
-    const toggle = document.getElementById("themeToggle");
-    const label = document.getElementById("themeLabel");
-    const printBtn = document.getElementById("printSlipBtn");
-
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const client = document.getElementById("ClientId").value;
-      const member = document.getElementById("MemberId").value;
-      const date = document.getElementById("Date").value;
-      const status = document.getElementById("Status").value;
-      const fees = parseFloat(document.getElementById("Fees").value).toFixed(2);
-      const receiptId = "R-" + Math.floor(Math.random() * 100000);
-
-      document.getElementById("slipClient").innerText = client;
-      document.getElementById("slipMember").innerText = member;
-      document.getElementById("slipDate").innerText = date;
-      document.getElementById("slipStatus").innerText = status;
-      document.getElementById("slipFees").innerText = fees;
-      document.getElementById("slipTotal").innerText = fees;
-      document.getElementById("receiptId").innerText = receiptId;
-
-      msg.classList.remove("hidden");
-      msg.classList.add("show");
-
-      setTimeout(() => {
-        msg.classList.remove("show");
-        msg.classList.add("hidden");
-        slip.classList.remove("hidden");
-      }, 1200);
-
-      form.reset();
-    });
-
-    // Dark / Light mode toggle
-    toggle.addEventListener("change", () => {
-      document.body.classList.toggle("dark-mode", toggle.checked);
-      label.textContent = toggle.checked ? "🌙 Dark Mode" : "🌞 Light Mode";
-    });
-
-    // Print only payslip
-    printBtn.addEventListener("click", () => {
-      window.print();
-    });
-</script>
  *@
-
-<!-- Theme Toggle -->
-<div class="theme-toggle">
-    <label class="switch">
-        <input type="checkbox" id="themeToggle">
-        <span class="slider"></span>
-    </label>
-    <span id="themeLabel">🌞 Light Mode</span>
-</div>
-
 <div class="containers">
     <div class="row">
         <div class="col-lg-6">
-            <h2>💪 Gym Fees Payment</h2>
+            <h2>💪 @ViewBag.Name Fees Payment</h2>
             <p class="subtitle">Enter member payment details below</p>
 
             <form id="paymentForm">
@@ -456,10 +89,10 @@
 <style>
   
 
-    .dark-mode {
+  /*   .dark-mode {
         background: #121212;
         color: #ddd;
-    }
+    } */
 
     .containers {
         background: var(--bg-card, #fff);
@@ -470,11 +103,11 @@
         transition: 0.3s;
     }
 
-    .dark-mode .containers {
+ /*    .dark-mode .containers {
         background: #1e1e1e;
         box-shadow: 0 10px 20px rgba(255,255,255,0.05);
     }
-
+ */
     h2 {
         text-align: center;
         color: inherit;
@@ -503,12 +136,12 @@
         color: #000;
     }
 
-    .dark-mode input, .dark-mode select {
+   /*  .dark-mode input, .dark-mode select {
         background: #333;
         border-color: #555;
         color: #fff;
     }
-
+ */
     .btnns {
         width: 100%;
         background: #283e51;
@@ -552,10 +185,10 @@
         transition: 0.3s;
     }
 
-    .dark-mode .payslip {
+   /*  .dark-mode .payslip {
         background: #2b2b2b;
         border-color: #444;
-    }
+    } */
 
     .slipheader {
         display: flex;
@@ -569,9 +202,9 @@
         color: #283e51;
     }
 
-    .dark-mode .logo {
+    /* .dark-mode .logo {
         color: #fff;
-    }
+    } */
 
     .summary th, .summary td {
         border: 1px solid #ccc;
@@ -579,9 +212,9 @@
         text-align: center;
     }
 
-    .dark-mode .summary th, .dark-mode .summary td {
+   /*  .dark-mode .summary th, .dark-mode .summary td {
         border-color: #555;
-    }
+    } */
 
     .footers {
         text-align: center;
@@ -601,29 +234,6 @@
 
         .printBtn:hover {
             background: #27ae60;
-        }
-
-    /* Toggle Switch */
-    .theme-toggle {
-        position: fixed;
-        top: 15px;
-        right: 25px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 50px;
-        height: 25px;
-    }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
         }
 
     .slider {
@@ -650,14 +260,7 @@
             border-radius: 50%;
         }
 
-    input:checked + .slider {
-        background-color: #283e51;
-    }
-
-        input:checked + .slider:before {
-            transform: translateX(25px);
-        }
-
+  
     /* Print only payslip */
     @@media print {
         body *
@@ -717,11 +320,7 @@
       form.reset();
     });
 
-    // Dark / Light mode toggle
-    toggle.addEventListener("change", () => {
-      document.body.classList.toggle("dark-mode", toggle.checked);
-      label.textContent = toggle.checked ? "🌙 Dark Mode" : "🌞 Light Mode";
-    });
+   
 
     // Print only payslip
     printBtn.addEventListener("click", () => {

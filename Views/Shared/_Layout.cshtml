@@ -59,9 +59,9 @@
                     background-color: #1e1e1e;
                 }
 
-                body.dark-mode .header .navbar-bran{
+                /* body.dark-mode .header .navbar-bran{
                     color:white !important;
-                }
+                } */
                     body.dark-mode .dropdown-menu a {
                         color: #ddd;
                     }
@@ -158,6 +158,7 @@
         }
 
             .header .navbar-brand {
+                color: black !important;
                 margin: 0;
                 font-size: 24px;
             }
@@ -200,9 +201,9 @@
                 transform: rotate(180deg);
             }
 
-        body.dark-mode .theme-toggle {
+       /*  body.dark-mode .theme-toggle {
             color: #f1f1f1;
-        }
+        } */
 
         .cards {
             display: grid;
@@ -283,13 +284,22 @@
 
         a{
             text-decoration:none;
-           color:black;
+        }
+
+        .fa-sun:before {
+            content: "\f185";
+            color: yellow;
+        }
+
+        .sidebar li span a{
+            color:white !important;
         }
     </style>
 </head>
 @using GymTrainingSystem.Helper
 @{
         var sessionUser = ApplicationHelper.GetUserSession(Context);
+            ViewBag.Name = @sessionUser?.ClientName;
 }
 <body>
     <div class="wrapper">
