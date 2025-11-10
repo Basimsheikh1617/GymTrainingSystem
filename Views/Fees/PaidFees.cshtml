@@ -1,31 +1,42 @@
-﻿
-@* <!-- Theme Toggle -->
-<div class="theme-toggle">
-    <label class="switch">
-        <input type="checkbox" id="themeToggle">
-        <span class="slider"></span>
-    </label>
-    <span id="themeLabel">🌞 Light Mode</span>
-</div>
- *@
+﻿@model MemeberFee;
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+@using GymTrainingSystem.Helper
+@{
+    var sessionUser = ApplicationHelper.GetUserSession(Context);
+
+}
 <div class="containers">
     <div class="row">
         <div class="col-lg-6">
             <h2>💪 @ViewBag.Name Fees Payment</h2>
             <p class="subtitle">Enter member payment details below</p>
 
-            <form id="paymentForm">
-                <label>Client ID</label>
-                <input type="number" id="ClientId" placeholder="Enter Client ID" required>
+            <!-- ✅ Clean form - removed data-ajax attributes -->
+            <form asp-controller="Fees"
+                  asp-action="FeesPaid"
+                  method="post"
+                  autocomplete="off"
+                  id="paymentForm">
+                <input asp-for="ClientId" name="ClientId" value="@ViewBag.ClientId" hidden readonly />
 
                 <label>Member ID</label>
-                <input type="number" id="MemberId" placeholder="Enter Member ID" required>
+                <select asp-for="MemberId" class="form-control" required>
+                    <option value="">Select</option>
+                    @if (ViewBag.List != null)
+                    {
+                        foreach (var rec in ViewBag.List)
+                        {
+                            <option value="@rec.MemberId">@rec.Name</option>
+                        }
+                    }
+                </select>
 
                 <label>Payment Date</label>
-                <input type="date" id="Date" required>
+                <input asp-for="Date" type="date" id="Date" required>
 
                 <label>Status</label>
-                <select id="Status" required>
+                <select asp-for="Status" id="Status" required>
                     <option value="">Select Status</option>
                     <option value="Paid">Paid</option>
                     <option value="Pending">Pending</option>
@@ -33,7 +44,7 @@
                 </select>
 
                 <label>Fees (Rs)</label>
-                <input type="number" id="Fees" placeholder="Enter Amount" step="0.01" required>
+                <input asp-for="Fees" type="number" id="Fees" placeholder="Enter Amount" step="0.01" required>
 
                 <button class="btnns" type="submit">Submit Payment</button>
             </form>
@@ -45,7 +56,7 @@
             <!-- Professional Payslip -->
             <div id="payslip" class="payslip hidden">
                 <div class="slipheader">
-                    <div class="logo">🏋️‍♂️ FitZone Gym</div>
+                    <div class="logo">🏋️‍♂️ @sessionUser?.ClientName</div>
                     <div class="invoice-info">
                         <h3>Payment Receipt</h3>
                         <p><strong>Receipt No:</strong> <span id="receiptId"></span></p>
@@ -55,8 +66,8 @@
                 <hr>
 
                 <div class="details">
-                    <p><strong>Client ID:</strong> <span id="slipClient"></span></p>
-                    <p><strong>Member ID:</strong> <span id="slipMember"></span></p>
+                    <p><strong>Gym:</strong> <span id="slipClient">@sessionUser?.ClientName</span></p>
+                    <p><strong>Member:</strong> <span id="slipMember"></span></p>
                     <p><strong>Status:</strong> <span id="slipStatus"></span></p>
                 </div>
 
@@ -78,43 +89,33 @@
                 </div>
 
                 <div class="footers">
-                    <p>Thank you for staying fit with <strong>FitZone Gym</strong> 🏋️‍♀️</p>
+                    <p>Thank you for staying fit with <strong>@ViewBag.Name</strong> 🏋️‍♀️</p>
                     <button id="printSlipBtn" class="printBtn">🖨️ Print Receipt</button>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Loader -->
+    <div id="loader" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.7); z-index:9999; text-align:center;">
+        <div style="position: relative; top: 40%;">
+            <i class="fas fa-spinner fa-spin fa-3x text-success"></i>
+            <p>Saving member...</p>
+        </div>
+    </div>
 </div>
 
 <style>
-  
-
-  /*   .dark-mode {
-        background: #121212;
-        color: #ddd;
-    } */
-
     .containers {
         border-radius: 15px;
         padding: 30px 40px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        animation: fadeIn 0.8s ease;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
         transition: 0.3s;
-    }
-
-    .dark-mode .containers {
-        background: #383636;
-        box-shadow: 0 10px 20px rgba(255,255,255,0.05);
+        background: #8080803b;
     }
 
     h2 {
         text-align: center;
-        color: inherit;
-    }
-
-    .subtitle {
-        text-align: center;
-        color: #777;
     }
 
     label {
@@ -129,18 +130,8 @@
         margin-bottom: 18px;
         border-radius: 8px;
         border: 1px solid #ccc;
-        font-size: 14px;
-        transition: 0.3s;
-        background: #fff;
-        color: #000;
     }
 
-   /*  .dark-mode input, .dark-mode select {
-        background: #333;
-        border-color: #555;
-        color: #fff;
-    }
- */
     .btnns {
         width: 100%;
         background: #283e51;
@@ -149,12 +140,7 @@
         padding: 12px;
         border-radius: 8px;
         cursor: pointer;
-        transition: 0.3s;
     }
-
-        .btnns:hover {
-            background: #1d2d3a;
-        }
 
     .success {
         text-align: center;
@@ -166,11 +152,6 @@
         transition: all 0.5s ease;
     }
 
-        .success.show {
-            opacity: 1;
-            transform: scale(1);
-        }
-
     .hidden {
         display: none;
     }
@@ -180,44 +161,12 @@
         border: 1px solid #ccc;
         border-radius: 12px;
         padding: 20px;
-        background: #f9fafc;
-        transition: 0.3s;
     }
-
-   /*  .dark-mode .payslip {
-        background: #2b2b2b;
-        border-color: #444;
-    } */
-
-    .slipheader {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .logo {
-        font-size: 18px;
-        font-weight: bold;
-        color: #283e51;
-    }
-
-    /* .dark-mode .logo {
-        color: #fff;
-    } */
 
     .summary th, .summary td {
         border: 1px solid #ccc;
         padding: 8px;
         text-align: center;
-    }
-
-   /*  .dark-mode .summary th, .dark-mode .summary td {
-        border-color: #555;
-    } */
-
-    .footers {
-        text-align: center;
-        margin-top: 15px;
     }
 
     .printBtn {
@@ -231,36 +180,9 @@
         font-weight: bold;
     }
 
-        .printBtn:hover {
-            background: #27ae60;
-        }
-
-    .slider {
-        position: absolute;
-        cursor: pointer;
-        background-color: #ccc;
-        border-radius: 25px;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        transition: 0.4s;
+    .summary {
+        display: grid;
     }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 19px;
-            width: 19px;
-            left: 3px;
-            bottom: 3px;
-            background-color: white;
-            transition: 0.4s;
-            border-radius: 50%;
-        }
-
-  
-    /* Print only payslip */
     @@media print {
         body *
 
@@ -282,47 +204,72 @@
     }
 </style>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-    const form = document.getElementById("paymentForm");
-    const msg = document.getElementById("successMsg");
-    const slip = document.getElementById("payslip");
-    const toggle = document.getElementById("themeToggle");
-    const label = document.getElementById("themeLabel");
     const printBtn = document.getElementById("printSlipBtn");
 
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const client = document.getElementById("ClientId").value;
-      const member = document.getElementById("MemberId").value;
-      const date = document.getElementById("Date").value;
-      const status = document.getElementById("Status").value;
-      const fees = parseFloat(document.getElementById("Fees").value).toFixed(2);
-      const receiptId = "R-" + Math.floor(Math.random() * 100000);
+    $("#paymentForm").on("submit", function (e) {
+        e.preventDefault();
 
-      document.getElementById("slipClient").innerText = client;
-      document.getElementById("slipMember").innerText = member;
-      document.getElementById("slipDate").innerText = date;
-      document.getElementById("slipStatus").innerText = status;
-      document.getElementById("slipFees").innerText = fees;
-      document.getElementById("slipTotal").innerText = fees;
-      document.getElementById("receiptId").innerText = receiptId;
+        const client = $("#ClientId").val();
+        const memberName = $("#MemberId option:selected").text();;
+        const date = $("#Date").val();
+        const status = $("#Status").val();
+        const fees = parseFloat($("#Fees").val()).toFixed(2);
+        const receiptId = "R-" + Math.floor(Math.random() * 100000);
 
-      msg.classList.remove("hidden");
-      msg.classList.add("show");
-
-      setTimeout(() => {
-        msg.classList.remove("show");
-        msg.classList.add("hidden");
-        slip.classList.remove("hidden");
-      }, 1200);
-
-      form.reset();
+        $.ajax({
+            url: '/Fees/FeesPaid',
+            type: 'POST',
+            data: $(this).serialize(),
+            beforeSend: function () {
+                $("#loader").show();
+            },
+            complete: function () {
+                $("#loader").hide();
+            },
+            success: function (response) {
+                if (response.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success!',
+                        text: 'Payment recorded successfully.',
+                        confirmButtonColor: '#28a745'
+                    }).then(() => {
+                     
+                        $("#slipMember").text(memberName);
+                        $("#slipDate").text(date);
+                        $("#slipStatus").text(status);
+                        $("#slipFees").text(fees);
+                        $("#slipTotal").text(fees);
+                        $("#receiptId").text(receiptId);
+                        $("#payslip").removeClass("hidden");
+                        
+                    });
+                    // $("#paymentForm")[0].reset();
+                } else {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Already Paid!',
+                        text: 'This member has already paid for this date.',
+                        confirmButtonColor: '#ffc107'
+                    });
+                }
+            },
+            error: function () {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong! Please try again.'
+                });
+            }
+        });
     });
 
-   
-
-    // Print only payslip
+    // Manual print button
     printBtn.addEventListener("click", () => {
-      window.print();
+        window.print();
     });
 </script>
