@@ -46,39 +46,7 @@ namespace GymTrainingSystem.Controllers
             return View(client);
             
         }
-        //[HttpPost]
-        //public JsonResult SaveProfile(GymClient model, IFormFile? logo)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        return Json(new { success = false, message = "Invalid model data." });
-        //    }
-
-        //    var existingClient = dbContext.GymClients.FirstOrDefault(x => x.ClientId == model.ClientId);
-        //    if (existingClient == null)
-        //    {
-        //        return Json(new { success = false, message = "Client not found." });
-        //    }
-
-        //    // ? Handle logo upload
-        //    if (logo != null && logo.Length > 0)
-        //    {
-        //        string newPath = UploadClientLogo(logo);
-        //        if (!string.IsNullOrEmpty(newPath))
-        //        {
-        //            existingClient.GymLogo = newPath;
-        //        }
-        //    }
-
-        //    // ? Update other fields
-        //    existingClient.Name = model.Name;
-        //    existingClient.Address = model.Address;
-        //    existingClient.Date = model.Date;
-
-        //    dbContext.SaveChanges();
-
-        //    return Json(new { success = true, message = "Profile updated successfully!" });
-        //}
+        
         [HttpPost]
         public JsonResult SaveProfile(GymClient model, IFormFile? logo)
         {
@@ -199,12 +167,18 @@ namespace GymTrainingSystem.Controllers
         [HttpPost]
         public JsonResult AddMember([FromForm] Member member)
         {
-            var sessionUser = GetUserSession(HttpContext);
-            member.ClientId = sessionUser.ClientId;
-            dbContext.Members.Add(member);
+            try
+            {
+                var sessionUser = GetUserSession(HttpContext);
+                member.ClientId = sessionUser.ClientId;
+                dbContext.Members.Add(member);
                 dbContext.SaveChanges();
                 return Json(new { success = true });
-            
+            }
+            catch(Exception ex)
+            {
+                return Json(ex.InnerException);
+            }
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

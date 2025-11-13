@@ -1,6 +1,6 @@
-﻿@model Member
+﻿```html
+@model Member
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
 <style>
     body {
         min-height: 100vh;
@@ -30,11 +30,9 @@
 
     .form-label {
         font-weight: 500;
-        
         float: inline-start;
     }
 </style>
-
 <div class="row justify-content-center">
     <div class="col-md-12">
         <div class="card shadow-sm">
@@ -42,17 +40,10 @@
                 <h4><i class="fas fa-dumbbell"></i> Add New Member</h4>
             </div>
             <div class="card-body">
-                <form asp-controller="Home"
+                <form id="addMemberForm" asp-controller="Home"
                       asp-action="AddMember"
                       method="post"
-                      autocomplete="off"
-                      data-ajax="true"
-                      data-ajax-method="POST"
-                      data-ajax-begin="onFormSubmitBegin"
-                      data-ajax-complete="onFormSubmitComplete"
-                      data-ajax-success="onFormSuccess"
-                      data-ajax-failure="onFormFailure">
-
+                      autocomplete="off">
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label asp-for="FullName" class="form-label">Name <span class="text-danger">*</span></label>
@@ -70,7 +61,6 @@
                             <span asp-validation-for="Gender" class="text-danger pull-left"></span>
                         </div>
                     </div>
-
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label asp-for="Age" class="form-label">Age <span class="text-danger">*</span></label>
@@ -83,7 +73,6 @@
                             <span asp-validation-for="PhoneNumber" class="text-danger pull-left"></span>
                         </div>
                     </div>
-
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label asp-for="Email" class="form-label">Email <span class="text-danger">*</span></label>
@@ -96,7 +85,6 @@
                             <span asp-validation-for="Address" class="text-danger pull-left"></span>
                         </div>
                     </div>
-
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label asp-for="JoiningDate" class="form-label">Joining Date <span class="text-danger">*</span></label>
@@ -113,7 +101,6 @@
                             <span asp-validation-for="MemberShipType" class="text-danger pull-left"></span>
                         </div>
                     </div>
-
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label asp-for="MemberShipStart" class="form-label">Membership Start</label>
@@ -126,7 +113,6 @@
                             <span asp-validation-for="MemberShipEnd" class="text-danger pull-left"></span>
                         </div>
                     </div>
-
                     <div class="row mb-3">
                         <div class="col-md-6">
                             <label asp-for="PersonalTraining" class="form-label">Personal Training <span class="text-danger">*</span></label>
@@ -146,12 +132,11 @@
                             <span asp-validation-for="Status" class="text-danger pull-left"></span>
                         </div>
                         <div class="col-md-3">
-                            <label asp-for="Fees" class="form-label">Member Fee</label>
-                            <input asp-for="Fees" id="Fees" type="number" class="form-control" />
+                            <label asp-for="Fees" class="form-label">Member Fee <span class="text-danger">*</span></label>
+                            <input asp-for="Fees" id="Fees" type="number" placeholder="Enter fee amount" required class="form-control" />
                             <span asp-validation-for="Fees" class="text-danger pull-left"></span>
                         </div>
                     </div>
-
                     <button type="submit" class="btn btn-gym w-100 mt-3">
                         <i class="fas fa-dumbbell"></i> Add
                     </button>
@@ -159,7 +144,6 @@
             </div>
         </div>
     </div>
-
     <!-- Loader -->
     <div id="loader" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(255,255,255,0.7); z-index:9999; text-align:center;">
         <div style="position: relative; top: 40%;">
@@ -168,43 +152,63 @@
         </div>
     </div>
 </div>
-
-<!-- ✅ Scripts (Correct Order) -->
-@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Scripts -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.unobtrusive-ajax/3.2.6/jquery.unobtrusive-ajax.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
- *@
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
-    function onFormSubmitBegin() {
-        $("#loader").show();
-    }
+    $(document).ready(function() {
+        // Parse the form for unobtrusive validation
+        $.validator.unobtrusive.parse("#addMemberForm");
 
-    function onFormSubmitComplete() {
-        $("#loader").hide();
-    }
+        $("#addMemberForm").on("submit", function (e) {
+            e.preventDefault();
 
-    function onFormSuccess(response) {
-        if (response.success) {
-            Swal.fire({
-                icon: 'success',
-                title: 'Success!',
-                text: 'Member added successfully.',
-                confirmButtonColor: '#28a745'
+            // Check if form is valid
+            if (!$(this).valid()) {
+                return; // Stop if invalid
+            }
+
+            $.ajax({
+                url: '/Home/AddMember',
+                type: 'POST',
+                data: $(this).serialize(),
+                beforeSend: function () {
+                    $("#loader").show();
+                },
+                complete: function () {
+                    $("#loader").hide();
+                },
+                success: function (response) {
+                    console.log(response);
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Member added successfully.',
+                            confirmButtonColor: '#28a745'
+                        }).then(() => {
+                            $("#addMemberForm")[0].reset();
+                            $("#addMemberForm").validate().resetForm(); // Reset validation state
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Warning!',
+                            text: response.message || 'Something went wrong while adding the member.',
+                            confirmButtonColor: '#ffc107'
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong! Please try again.'
+                    });
+                }
             });
-            $('form')[0].reset();
-        }
-    }
-
-    function onFormFailure() {
-        Swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'Something went wrong! Please try again.'
         });
-    }
+    });
 </script>
-

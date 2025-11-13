@@ -202,6 +202,35 @@
     }
 
     }
+
+    @@media print {
+
+    /* صرف payslip ہی پرنٹ ہو */
+    body * {
+        visibility: hidden !important;
+    }
+
+    #payslip, #payslip * {
+        visibility: visible !important;
+    }
+
+    #payslip {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* پرنٹ بٹن چھپا دیں */
+    #printSlipBtn {
+        display: none !important;
+    }
+
+  
+}
+
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
