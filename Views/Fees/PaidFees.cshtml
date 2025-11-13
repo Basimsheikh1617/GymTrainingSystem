@@ -180,33 +180,128 @@
         font-weight: bold;
     }
 
-    .summary {
-        display: grid;
+
+
+</style>
+<style>
+   
+
+    .payslip {
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        padding: 30px;
+        width: 400px;
+        max-width: 90%;
+        position: relative;
+        overflow: hidden;
     }
+
+        .payslip::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: radial-gradient(circle, #2ecc71 0%, transparent 70%);
+            opacity: 0.2;
+        }
+
+    .slipheader {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .logo {
+        font-size: 2em;
+        color: #2ecc71;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .invoice-info h3 {
+        margin: 0;
+        color: #333;
+        font-size: 1.5em;
+    }
+
+    .invoice-info p {
+        margin: 5px 0;
+        color: #666;
+        font-size: 0.9em;
+    }
+
+    hr {
+        border: 0;
+        border-top: 1px solid #eee;
+        margin: 20px 0;
+    }
+
+    .details p {
+        margin: 8px 0;
+        color: #555;
+        font-size: 0.95em;
+    }
+
+    .details strong {
+        color: #333;
+    }
+
+    .summary table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .summary th, .summary td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+
+    .summary th {
+        background-color: #f9f9f9;
+        color: #333;
+        font-weight: bold;
+    }
+
+    .summary .total-row td {
+        font-weight: bold;
+        color: #2ecc71;
+        font-size: 1.1em;
+    }
+
+    .footers {
+        text-align: center;
+        margin-top: 30px;
+    }
+
+        .footers p {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+    .printBtn {
+        background-color: #2ecc71;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+
+        .printBtn:hover {
+            background-color: #27ae60;
+        }
+
     @@media print {
         body *
 
     {
-        visibility: hidden;
-    }
-
-    #payslip, #payslip * {
-        visibility: visible;
-    }
-
-    #payslip {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-    }
-
-    }
-
-    @@media print {
-
-    /* صرف payslip ہی پرنٹ ہو */
-    body * {
         visibility: hidden !important;
     }
 
@@ -220,17 +315,20 @@
         left: 0;
         width: 100%;
         margin: 0;
-        padding: 0;
+        padding: 20px;
+        box-shadow: none;
+        border: none;
     }
 
-    /* پرنٹ بٹن چھپا دیں */
     #printSlipBtn {
         display: none !important;
     }
 
-  
-}
+    .payslip::before {
+        display: none;
+    }
 
+    }
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -299,6 +397,13 @@
 
     // Manual print button
     printBtn.addEventListener("click", () => {
-        window.print();
+  //      window.print();
+
+          var divToPrint = document.getElementById("payslip");
+        newWin = window.open("");
+        newWin.document.write(divToPrint.outerHTML);
+        newWin.print();
+        newWin.close();
     });
+
 </script>
